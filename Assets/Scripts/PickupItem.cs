@@ -8,8 +8,10 @@ public class PickupItem : MonoBehaviour
 {
     private float pickupRange = 1f;
     public List<Item> inventory = new List<Item>();
-    public List<UISloth> slots = new List<UISloth>();
     private int itemCollectingLimitation =6;
+    public List<Sprite> images = new List<Sprite>();
+
+    public List<Button> sloths;
 
 
 
@@ -46,6 +48,12 @@ public class PickupItem : MonoBehaviour
                     }
             }
         }
+        // if (Input.GetMouseButtonDown(1))
+        // {
+        //     // Eating();
+        //     int slotToConsume =0;
+        //     Eating(slotToConsume);
+        // }
     }
 
     void AddToInventory(Item item)
@@ -55,37 +63,32 @@ public class PickupItem : MonoBehaviour
         var spriteRenderer = item.GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            foreach (var slot in slots)
-            {
-                var isEmpty = slot.IsEmpty();
-                if (isEmpty)
-                {
-                    slot.SetImage(spriteRenderer.sprite);
-                    break;
-                }
-            }
+            images.Add(spriteRenderer.sprite);
         }
+        UpdateUISlots();
         
         Destroy(item.gameObject);
         Debug.Log("Item picked!");
     }
-    // void Eating()
-    // {
-    //     int count = Mathf.Min(sloths.Count, images.Count);
-    //     for (int i = 0; i < count; i++)
-    //     { 
-    //         images[i] = sloths[i].sprite;
-    //         sloths[i].color = new Color(0f, 0f, 0f, 0f);;
-    //         inventory.RemoveAt(i);
-    //     }
-    //     
-    // }
-    public void Eating(int slotId)
-    {
-        var uiSloth = slots.Find(slot => slot.id == slotId);
-        uiSloth.Clear();
 
-        var find = inventory.Find(item => item.id == uiSloth.itemThatIsInSLotId);
-        inventory.Remove(find);
+    void UpdateUISlots()
+    {
+        for (int i = 0; i < images.Count; i++)
+        {
+            sloths[i].image.sprite = images[i];
+            sloths[i].image.color = Color.white;
+        }
     }
+    // void Eating(int slotIndex)
+    // {
+    //     if (slotIndex < images.Count && slotIndex < inventory.Count)
+    //     {
+    //         
+    //         inventory.RemoveAt(slotIndex);
+    //         images.RemoveAt(slotIndex);
+    //         
+    //         sloths[slotIndex].sprite = null;
+    //         sloths[slotIndex].color = new Color(1f, 1f, 1f, 0f);
+    //     }
+    // }
 }

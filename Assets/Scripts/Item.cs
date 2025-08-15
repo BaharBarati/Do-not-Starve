@@ -6,7 +6,7 @@ public class Item : MonoBehaviour
 {
     public Sprite sprite;
 
-    public int id;
+
     // Start is called before the first frame update
     void Start()
     {
