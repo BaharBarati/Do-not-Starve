@@ -2,50 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections.Generic;
+using Logic;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class PickupItem : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
     private float pickupRange = 1f;
     public List<Item> inventory = new List<Item>();
-    private int itemCollectingLimitation =6;
+    private int itemCollectingLimitation = 6;
     public List<Sprite> images = new List<Sprite>();
 
-    public List<Button> sloths;
+   public List<Button> slots;
 
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, pickupRange);
             int i = itemCollectingLimitation;
             foreach (var hitCollider in hitColliders)
             {
-                    var component = hitCollider.GetComponent<Item>();
-                    if (component != null)
+                var component = hitCollider.GetComponent<Item>();
+                if (component != null)
+                {
+                    if (i > 0 && inventory.Count < 6)
                     {
-                        if (i > 0  && inventory.Count<6)
-                        {
-                            AddToInventory(component);
+                        AddToInventory(component);
 
-                            i--;
-                        }
-                        else
-                        {
-                            break;
-                        }
-
+                        i--;
                     }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
         // if (Input.GetMouseButtonDown(1))
@@ -65,18 +56,36 @@ public class PickupItem : MonoBehaviour
         {
             images.Add(spriteRenderer.sprite);
         }
+
         UpdateUISlots();
-        
+
         Destroy(item.gameObject);
         Debug.Log("Item picked!");
     }
 
+    public void Consume(int slotIndex, Health health, int healAmount)
+    {
+        if (slotIndex < 0 || slotIndex >= images.Count || slotIndex >= inventory.Count)
+            return;
+        health.Add(healAmount);
+        inventory.RemoveAt(slotIndex);
+        images.RemoveAt(slotIndex);
+    }
     void UpdateUISlots()
     {
         for (int i = 0; i < images.Count; i++)
         {
-            sloths[i].image.sprite = images[i];
-            sloths[i].image.color = Color.white;
+            if (i < images.Count)
+            {
+                slots[i].image.sprite = images[i];
+                slots[i].image.color = Color.white;
+            }
+            else
+            {
+                slots[i].image.sprite = null;
+                slots[i].image.color = Color.black;
+            }
+            
         }
     }
     // void Eating(int slotIndex)

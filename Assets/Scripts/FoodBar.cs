@@ -9,7 +9,6 @@ public class FoodBar : MonoBehaviour
     public Slider slider;
     
     public float Decreacing = 0.01f ;
-    
 
     public void SetMaxHealth(int health)
     {

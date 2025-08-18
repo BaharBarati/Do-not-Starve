@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Logic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
     public Slider slider;
+    public Health health;
 
     public void SetHealth(int health)
     {
@@ -17,15 +19,15 @@ public class HealthBar : MonoBehaviour
         slider.maxValue = health;
         slider.value = health;
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        health.onHealthChange += OnHealthChange;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnHealthChange()
     {
-        
+        slider.value = health.currentHealth;
     }
 }
